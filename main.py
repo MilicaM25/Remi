@@ -27,8 +27,8 @@ class Deck:
 	def __init__(self, packs):
 
 		self.packs = packs
-		self.cards = []
-		self.table = []
+		self.cards = []	#dek nepoznatih karata
+		self.table = [] #bacene karte na sto
 		self.build_deck()
 
 	# Kreira dek karata
@@ -52,6 +52,7 @@ class Deck:
 
 		self.table.reverse()
 		self.cards = self.table
+		self.table.clear()
 
 	def draw_card(self):
 
@@ -65,3 +66,100 @@ class Deck:
 		card_flipped = self.cards.pop()
 		return self.table.append(card_flipped)
 
+
+class Game:
+
+	def __init__(self, player1 , deck):
+
+		self.deck = deck
+		self.player1 = player1
+		self.cards_that_are_put_on_table = []
+		self.deck = []
+		self.table = []
+
+	def deal_card(self):
+		pass
+
+	def deal_hand(self):
+		pass
+
+	def pickup_card_from_unknown_pile(self):
+		pass
+
+	def pickup_card_from_known_pile(self):
+		pass
+
+	def is_valid_openning(self, player1):
+		pass
+
+	def displey_pile(self):
+		pass
+
+	def can_you_add_to_alredy_existing_set(self):
+		pass
+
+	def check_is_game_over(self):
+		pass
+
+	def calculate_score(self):
+		pass
+
+	def play(self):
+		pass
+
+
+#Globalne funkcije
+
+def is_valid_run(sequance):
+	pass
+
+
+"""
+#Klasa za modelovanje ruke igraca i njegovih mogucih akcija
+class Player:
+
+	def __init__(self, name, deck, game):
+
+		self.name = name	#ime igraca
+		self.deck = deck  	#trenutni objekat deka igre
+		self.game = game  	#trenutni objekat igre
+
+		# Karte igraca
+		self.hand = []  	# Karte koje igrac poseduje
+		self.made_hand = [] # Karte koje je izlozio igrac
+		self.is_open = False #Da li je igrac otvoren
+		self.is_it_first_move = True #Da li je igracu prvi potez
+
+
+	def deal_card(self):
+		deckcard = self.deck.draw_card()
+		self.hand.append(deckcard)
+
+	def deal_hand(self):
+
+		if self.is_it_first_move:
+			for i in range(14):
+				self.deal_card()
+
+	def pickup_card_from_known_pile (self):
+		#Adds pick up card from table to player's hand.
+		pickupcard = self.deck.table.pop()
+
+		return self.hand.append(pickupcard)
+
+	def pickup_card_from_unknown_pile (self):
+		pickupcard = self.deck.cards.pop()
+
+		return self.hand.append(pickupcard)
+
+	def throw_out(self, card_index):
+		#Removes card from player's hand to table.
+
+#		if card_index < 0 or card_index > 15:
+#			print('That is not a valid card index. Remeber the cards are ordered 1 - 15, the top representing 1 and the bottom 13.')
+
+		throwout = self.hand.pop(card_index)
+		self.deck.table.append(throwout)
+
+
+"""
