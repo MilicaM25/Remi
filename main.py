@@ -1,14 +1,13 @@
 import random
 
-SYMBOLS = ['♠', '♢', '♡', '♣']
-SUIT = ['Hearts', 'Clubs', 'Spades', 'Diamonds']
-RANK = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
-RANK_VALUE = {'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'T': 10, 'J': 11, 'Q': 12, 'K': 13}
-SUIT_SYMBOLS = {'Hearts': '♡', 'Clubs': '♣', 'Spades': '♠', 'Diamonds': '♢'}
-
-
 #Klasa karta- model jedne karte
 class Card:
+	SYMBOLS = ['♠', '♢', '♡', '♣']
+	SUIT = ['Hearts', 'Clubs', 'Spades', 'Diamonds']
+	RANK = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
+	RANK_VALUE = {'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'T': 10, 'J': 11, 'Q': 12,
+				  'K': 13}
+	SUIT_SYMBOLS = {'Hearts': '♡', 'Clubs': '♣', 'Spades': '♠', 'Diamonds': '♢'}
 
 	def __init__(self, rank, suit):
 
@@ -34,7 +33,7 @@ class Deck:
 	# Kreira dek karata
 	def build_deck(self):
 			for i in range(self.packs):
-				for s in SUIT:
+				for s in Card.SUIT:
 					for r in range(1, 13):
 						self.cards.append(Card(r, s))
 	#			for i in range(2):
@@ -69,10 +68,12 @@ class Deck:
 
 class Game:
 
-	def __init__(self, number_of_players, deck):
+	def __init__(self, number_of_players):
 
 		self.number_of_players = number_of_players
-		self.deck = deck
+		self.count_turns = 0
+		self.current_player = 0
+		self.deck = Deck(2)
 		self.cards_that_are_put_on_table = []
 		self.table = []
 
@@ -91,23 +92,35 @@ class Game:
 	def pickup_card_from_known_pile(self):
 		pass
 
-	def is_valid_openning(self):
+	def is_valid_opening(self):
 		pass
 
 	def discard_card(self):
 		pass
 
-	def can_you_add_to_alredy_existing_set(self):
+	def can_you_add_to_already_existing_set(self):
 		pass
 
-	def adding_to_alredy_existing_set(self):
+	def adding_to_already_existing_set(self):
 		pass
 
-	def player_turn(self):
+	def get_current_player(self):
+
+		return self.current_player
+
+	def next_player(self):
+
+		self.current_player = (self.current_player + 1) % self.number_of_players
+
+		self.count_turns += 1 if self.current_player == 0 else 0
+
+
+	def get_last_thrown_card(self):
 		pass
 
-	def check_is_game_over(self):
-		pass
+	def is_game_over(self):
+
+		return self.count_turns == 10
 
 	def calculate_score(self):
 		pass
@@ -115,17 +128,22 @@ class Game:
 
 class Bot1:
 
-	def __init__(self, last_card, hand, cards_on_table):
+	def __init__(self):
 
-		self.last_card = last_card
-		self.hand = hand
-		self.cards_on_table = cards_on_table
+	#	self.last_card = last_card
+	#	self.hand = hand
+	#	self.cards_on_table = cards_on_table
 		self.can_you_open = False
+
+	def make_a_move(self, game):
+
+		print(game.get_current_player(), game.count_turns)
+		self.finished_turn(game)
 
 	def make_sets(self, hand):
 		pass
 
-	def which_card_to_take(self, cards_on_table, last_card):
+	def choose_card_to_pick_up(self, cards_on_table, last_card):
 		pass
 
 	def pick_up_card(self):
@@ -140,21 +158,37 @@ class Bot1:
 	def discard_card(self, hand):
 		pass
 
+	def finished_turn(self, game):
+		game.next_player()
+
 
 class Controller:
 
-	def __init__(self, bot1, game):
+	def __init__(self):
 
-		self.bot1 = bot1
-		self.game = game
+		self.game = Game(2)
+		self.bot = Bot1()
 
 	def play(self):
-		pass
+		while not self.game.is_game_over():
+			self.bot.make_a_move(self.game)
+		print("Gotovooo")
 
 #Globalne funkcije
 
 def is_valid_run(sequance):
 	pass
+
+def main():
+
+	c = Controller()
+
+	c.play()
+
+
+
+if __name__ == "__main__":
+    main()
 
 
 """
