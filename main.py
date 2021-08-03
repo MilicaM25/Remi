@@ -69,13 +69,15 @@ class Deck:
 
 class Game:
 
-	def __init__(self, player1 , deck):
+	def __init__(self, number_of_players, deck):
 
+		self.number_of_players = number_of_players
 		self.deck = deck
-		self.player1 = player1
 		self.cards_that_are_put_on_table = []
-		self.deck = []
 		self.table = []
+
+	def player_initialization(self, number_of_players):
+		pass
 
 	def deal_card(self):
 		pass
@@ -89,13 +91,19 @@ class Game:
 	def pickup_card_from_known_pile(self):
 		pass
 
-	def is_valid_openning(self, player1):
+	def is_valid_openning(self):
 		pass
 
-	def displey_pile(self):
+	def discard_card(self):
 		pass
 
 	def can_you_add_to_alredy_existing_set(self):
+		pass
+
+	def adding_to_alredy_existing_set(self):
+		pass
+
+	def player_turn(self):
 		pass
 
 	def check_is_game_over(self):
@@ -104,9 +112,44 @@ class Game:
 	def calculate_score(self):
 		pass
 
-	def play(self):
+
+class Bot1:
+
+	def __init__(self, last_card, hand, cards_on_table):
+
+		self.last_card = last_card
+		self.hand = hand
+		self.cards_on_table = cards_on_table
+		self.can_you_open = False
+
+	def make_sets(self, hand):
 		pass
 
+	def which_card_to_take(self, cards_on_table, last_card):
+		pass
+
+	def pick_up_card(self):
+		pass
+
+	def can_you_open(self, hand):
+		pass
+
+	def open(self, can_you_open):
+		pass
+
+	def discard_card(self, hand):
+		pass
+
+
+class Controller:
+
+	def __init__(self, bot1, game):
+
+		self.bot1 = bot1
+		self.game = game
+
+	def play(self):
+		pass
 
 #Globalne funkcije
 
