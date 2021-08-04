@@ -92,8 +92,8 @@ class Game:
 
 	def deal_card(self):
 
-            deckcard = self.deck.draw_card()
-            self.hand.append(deckcard)
+		deckcard = self.deck.draw_card()
+		self.hand.append(deckcard)
 
 	def deal_hand(self):
 
@@ -101,12 +101,10 @@ class Game:
              self.deal_card()
 
 
-	def draw_card(self):
+	def can_you_draw_card(self):
 
 		if not self.state_status == TurnState.DRAW_CARD:
-			print("Not valid move")
-		else:
-			pass
+			return False
 
 		self.state_status = TurnState.OPEN_OR_DISCARD_CARD
 
@@ -123,59 +121,72 @@ class Game:
 	def is_valid_opening(self):
 
 		if not self.state_status == TurnState.OPEN_OR_DISCARD_CARD:
-			print("Not valid move")
+			return False
 		else:
 			pass
+
+	def open (self):
+
+		#nesto
+
+		if not is_valid_opening():
+			print("Can not open")
+			exit(1)
 
 		self.state_status = TurnState.PUT_CARD_ON_TABLE
 
 	def can_you_add_to_already_existing_set(self):
 
 		if not self.state_status == TurnState.OPEN_OR_DISCARD_CARD or not  self.state_status == TurnState.PUT_CARD_ON_TABLE:
-			print("Not valid move")
+			return False
 		else:
 			pass
 
-		self.state_status = TurnState.DISCARD_CARD
 
 	def adding_to_already_existing_set(self):
-		pass
+
+		if not self.can_you_add_to_already_existing_set():
+			print("Can not add card to another set")
+			exit(1)
+
+		self.state_status = TurnState.DISCARD_CARD
+
+	def is_valid_to_discard_card(self):
+		return self.state_status == TurnState.OPEN_OR_DISCARD_CARD or self.state_status == TurnState.PUT_CARD_ON_TABLE or self.state_status == TurnState.DISCARD_CARD
 
 	def discard_card(self, card_index):
 
-		if not self.state_status == TurnState.OPEN_OR_DISCARD_CARD or not  self.state_status == TurnState.PUT_CARD_ON_TABLE or not self.state_status == TurnState.DISCARD_CARD:
-			print("Not valid move")
-		else:
-			discard_card  = self.hand.pop(card_index)
-			self.deck.table.append(discard_card)
+		if not self.is_valid_to_discard_card():
+			print("You can not discard card")
+			exit(1)
+
+		discard_card  = self.hand.pop(card_index)
+		self.deck.table.append(discard_card)
 
 		self.state_status == TurnState.FINISH_MOVE
 
 	def get_current_player(self):
-
 		return self.current_player
+
+	def is_valid_finish_turn(self):
+		return self.state_status == TurnState.FINISH_MOVE
 
 	def finish_turn(self):
 
-		if not self.state_status == TurnState.FINISH_MOVE:
-			print("Not valid move")
-		else:
-			pass
-
-		self.state_status == TurnState.DRAW_CARD
-
-	def next_player(self):
+		if not self.is_valid_finish_turn():
+			print("Can not finish turn")
+			exit(1)
 
 		self.current_player = (self.current_player + 1) % self.number_of_players
 
 		self.count_turns += 1 if self.current_player == 0 else 0
 
+		self.state_status = TurnState.DRAW_CARD
 
 	def get_last_thrown_card(self):
 		pass
 
 	def is_game_over(self):
-
 		return self.count_turns == 10
 
 	def calculate_score(self):
