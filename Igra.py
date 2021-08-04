@@ -1,4 +1,13 @@
 import random
+from enum import Enum, auto
+
+class TurnState(Enum):
+	DRAW_CARD = 1
+	OPEN_OR_DISCARD_CARD = 2
+	PUT_CARD_ON_TABLE = 3
+	DISCARD_CARD = 4
+	FINISH_MOVE = 5
+
 
 #Klasa karta- model jedne karte
 class Card:
@@ -76,6 +85,7 @@ class Game:
 		self.deck = Deck(2)
 		self.cards_that_are_put_on_table = []
 		self.table = []
+		self.state_status = TurnState.DRAW_CARD
 
 	def player_initialization(self, number_of_players):
 		pass
@@ -90,9 +100,19 @@ class Game:
          for i in range(14):
              self.deal_card()
 
+
+	def draw_card(self):
+
+		if not self.state_status == TurnState.DRAW_CARD:
+			print("Not valid move")
+		else:
+			pass
+
+		self.state_status = TurnState.OPEN_OR_DISCARD_CARD
+
+
 	def pickup_card_from_unknown_pile(self):
 		pickupcard = self.deck.table.pop()
-
 		return self.hand.append(pickupcard)
 
 	def pickup_card_from_known_pile(self):
@@ -101,22 +121,48 @@ class Game:
 		return self.hand.append(pickupcard)
 
 	def is_valid_opening(self):
-		pass
 
-	def discard_card(self, card_index):
+		if not self.state_status == TurnState.OPEN_OR_DISCARD_CARD:
+			print("Not valid move")
+		else:
+			pass
 
-		discard_card  = self.hand.pop(card_index)
-		self.deck.table.append(discard_card)
+		self.state_status = TurnState.PUT_CARD_ON_TABLE
 
 	def can_you_add_to_already_existing_set(self):
-		pass
+
+		if not self.state_status == TurnState.OPEN_OR_DISCARD_CARD or not  self.state_status == TurnState.PUT_CARD_ON_TABLE:
+			print("Not valid move")
+		else:
+			pass
+
+		self.state_status = TurnState.DISCARD_CARD
 
 	def adding_to_already_existing_set(self):
 		pass
 
+	def discard_card(self, card_index):
+
+		if not self.state_status == TurnState.OPEN_OR_DISCARD_CARD or not  self.state_status == TurnState.PUT_CARD_ON_TABLE or not self.state_status == TurnState.DISCARD_CARD:
+			print("Not valid move")
+		else:
+			discard_card  = self.hand.pop(card_index)
+			self.deck.table.append(discard_card)
+
+		self.state_status == TurnState.FINISH_MOVE
+
 	def get_current_player(self):
 
 		return self.current_player
+
+	def finish_turn(self):
+
+		if not self.state_status == TurnState.FINISH_MOVE:
+			print("Not valid move")
+		else:
+			pass
+
+		self.state_status == TurnState.DRAW_CARD
 
 	def next_player(self):
 
