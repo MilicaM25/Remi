@@ -13,8 +13,8 @@ class TurnState(Enum):
 class Card:
 	SYMBOLS = ['♠', '♢', '♡', '♣']
 	SUIT = ['Hearts', 'Clubs', 'Spades', 'Diamonds']
-	RANK = ['A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K']
-	RANK_VALUE = {'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'T': 10, 'J': 11, 'Q': 12,
+	RANK = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+	RANK_VALUE = {'A': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, '10': 10, 'J': 11, 'Q': 12,
 				  'K': 13}
 	SUIT_SYMBOLS = {'Hearts': '♡', 'Clubs': '♣', 'Spades': '♠', 'Diamonds': '♢'}
 
@@ -43,7 +43,7 @@ class Deck:
 	def build_deck(self):
 			for i in range(self.packs):
 				for s in Card.SUIT:
-					for r in range(1, 13):
+					for r in Card.RANK_VALUE:
 						self.cards.append(Card(r, s))
 	#			for i in range(2):
 	#				self.cards.append(Card('Joker', i))
@@ -94,6 +94,11 @@ class Game:
 		self.open_players = [
 			False for _ in range(self.number_of_players)
 		]
+		self.number_of_sets = 3 #dobijamo od igraca koliko ima setova
+		self.made_hand = [
+			[] for _ in range(self.number_of_sets)
+		]
+		self.hand_count = 0
 
 	def deal_hand(self):
 
@@ -152,7 +157,13 @@ class Game:
 
 	def is_valid_opening(self):
 
+		for sets in self.made_hand:
+			for item in sets:
+				self.hand_count += self.made_hand[sets][item].value
+
 		if not self.state_status == TurnState.OPEN_OR_DISCARD_CARD:
+			return False
+		elif self.hand_count <= 51:
 			return False
 		else:
 			pass
