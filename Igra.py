@@ -1,5 +1,5 @@
 import random
-from enum import Enum, auto
+from enum import Enum
 
 class TurnState(Enum):
 	DRAW_CARD = 1
@@ -61,6 +61,7 @@ class Deck:
 		self.table.reverse()
 		self.cards = self.table
 		self.table.clear()
+		self.flip_card()
 
 	def draw_card(self):
 
@@ -83,40 +84,71 @@ class Game:
 		self.count_turns = 0
 		self.current_player = 0
 		self.deck = Deck(2)
+		self.deck.shuffle()
 		self.cards_that_are_put_on_table = []
 		self.table = []
 		self.state_status = TurnState.DRAW_CARD
-
-	def player_initialization(self, number_of_players):
-		pass
-
-	def deal_card(self):
-
-		deckcard = self.deck.draw_card()
-		self.hand.append(deckcard)
+		self.hands = [
+			[] for _ in range(self.number_of_players)
+		]
+		self.open_players = [
+			False for _ in range(self.number_of_players)
+		]
 
 	def deal_hand(self):
 
-         for i in range(14):
-             self.deal_card()
+		i = 0
+		while i < self.number_of_players:
+			for k in range(14):
+				deckcard = self.deck.draw_card()
+				self.hands[i].append(deckcard)
+			i += 1
 
 
 	def can_you_draw_card(self):
 
 		if not self.state_status == TurnState.DRAW_CARD:
 			return False
+		elif len(self.hands[self.current_player]) > 15 or len(self.hands[self.current_player]) <= 0:
+			return False
+		else:
+			return True
 
-		self.state_status = TurnState.OPEN_OR_DISCARD_CARD
+	def can_you_draw_from_known_pile(self):
+
+		if self.count_turns == 0:
+			return True
+		elif self.open_players[self.current_player] == True:
+			return True
+		else:
+			pass
+			# slucaj kada igrac nije otvoren, a zeli da uzme kartu sa sredine da bi se otvorio
+			# mora da se proveri da li igrac moze tako nesto da uradi
 
 
 	def pickup_card_from_unknown_pile(self):
-		pickupcard = self.deck.table.pop()
-		return self.hand.append(pickupcard)
+
+		if not self.can_you_draw_card():
+			print("Can not take card")
+			exit(1)
+
+		pickupcard = self.deck.draw_card()
+		self.state_status = TurnState.OPEN_OR_DISCARD_CARD
+		return self.hands[self.current_player].append(pickupcard)
 
 	def pickup_card_from_known_pile(self):
-		pickupcard = self.deck.table.pop()
 
-		return self.hand.append(pickupcard)
+		if not self.can_you_draw_card():
+			print("Can not take card")
+			exit(1)
+
+		if not self.can_you_draw_from_known_pile():
+			print("Can not take card from discard pile")
+			exit(1)
+
+		pickupcard = self.table.pop()
+		self.state_status = TurnState.OPEN_OR_DISCARD_CARD
+		return self.hands[self.current_player].append(pickupcard)
 
 	def is_valid_opening(self):
 
@@ -129,7 +161,7 @@ class Game:
 
 		#nesto
 
-		if not is_valid_opening():
+		if not self.is_valid_opening():
 			print("Can not open")
 			exit(1)
 
@@ -160,10 +192,10 @@ class Game:
 			print("You can not discard card")
 			exit(1)
 
-		discard_card  = self.hand.pop(card_index)
+		discard_card  = self.hands[self.current_player].pop(card_index)
 		self.deck.table.append(discard_card)
 
-		self.state_status == TurnState.FINISH_MOVE
+		self.state_status = TurnState.FINISH_MOVE
 
 	def get_current_player(self):
 		return self.current_player
@@ -186,8 +218,19 @@ class Game:
 	def get_last_thrown_card(self):
 		pass
 
+	def is_hand_empty(self, hand):
+		return len(hand) == 0
+
 	def is_game_over(self):
-		return self.count_turns == 10
+
+		i = 0
+
+		while i < self.number_of_players:
+			if self.is_hand_empty(self.hands[i]):
+				return True
+			i += 1
+
+		return False
 
 	def calculate_score(self):
 		pass
